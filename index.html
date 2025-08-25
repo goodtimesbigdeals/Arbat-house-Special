@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arbat House — Гостевые цифровые решения (Vanilla.js)</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="brand">
+    <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 6 6 .9-4.5 4.2 1.1 6.5L12 16.8 6.4 19.6l1.1-6.5L3 8.9 9 8z" fill="currentColor"/></svg>
+    <span>Arbat House — Digital Upgrade</span>
+  </div>
+  <nav class="top-nav">
+    <a href="#overview">Обзор</a>
+    <a href="#concierge">AI‑консьерж</a>
+    <a href="#upsells">Апселлы</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#housekeeping">Хаускипинг</a>
+    <a href="#wifi">Wi‑Fi/Согласия</a>
+    <a href="#telephony">IVR</a>
+    <a href="#mice">MICE</a>
+    <a href="#translator">Переводчик</a>
+    <a href="#admin">Админ</a>
+  </nav>
+</header>
+
+<main>
+<section id="overview" class="card">
+  <h1>Гостевые цифровые решения для Arbat House (Vanilla.js демо)</h1>
+  <p>Цель: быстрый рост прямых бронирований, допродаж и репутации без тяжёлых интеграций. Всё ниже — рабочие мини‑модули для мгновенного демо и пилота.</p>
+  <ul class="grid two">
+    <li><strong>Без фреймворков:</strong> чистый HTML/CSS/JS.</li>
+    <li><strong>Хранение данных:</strong> локально в браузере (LocalStorage).</li>
+    <li><strong>Печать/экспорт:</strong> системная печать «в PDF».</li>
+    <li><strong>QR‑генерация:</strong> через публичный API qrserver (без ключей).</li>
+  </ul>
+</section>
+
+<section id="concierge" class="card">
+  <h2>AI‑консьерж (демо‑чат на правилах)</h2>
+  <div class="row">
+    <div>
+      <label>Язык ответов:</label>
+      <select id="concierge-lang">
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+        <option value="ar">العربية</option>
+      </select>
+      <div id="concierge-chat" class="chat"></div>
+      <div class="chat-inputs">
+        <input id="concierge-input" type="text" placeholder="Задайте вопрос: время заезда, завтрак, трансфер…">
+        <button id="concierge-send">Отправить</button>
+      </div>
+    </div>
+    <aside class="hint">
+      <p><strong>Что умеет:</strong> отвечает на частые вопросы (чек‑ин/аут, завтрак, трансфер, парковка, маршрут до Арбата/Кремля). Логи не выходят наружу.</p>
+      <details>
+        <summary>Поддерживаемые намерения</summary>
+        <ul>
+          <li>checkin / checkout</li>
+          <li>breakfast / restaurant</li>
+          <li>transfer / taxi / airport</li>
+          <li>parking</li>
+          <li>route / how to get / Арбат / Кремль</li>
+          <li>contacts / phone / email</li>
+        </ul>
+      </details>
+    </aside>
+  </div>
+</section>
+
+<section id="upsells" class="card">
+  <h2>Умные апселлы (до/во время/после)</h2>
+  <p>Соберите предложения и отправляйте гостям заранее (T‑48/T‑24/T‑4). В демо создаются «заказы» и считается выручка.</p>
+  <div class="row">
+    <form id="upsell-form" class="form">
+      <label>Гость/номер брони<input name="guest" required placeholder="Иван Иванов / BR‑1248"></label>
+      <label>Услуга
+        <select name="item">
+          <option value="Трансфер из DME (фикс)">Трансфер из DME (фикс)</option>
+          <option value="Ранний заезд (до 12:00)">Ранний заезд (до 12:00)</option>
+          <option value="Поздний выезд (до 16:00)">Поздний выезд (до 16:00)</option>
+          <option value="Завтрак (шведский стол)">Завтрак (шведский стол)</option>
+          <option value="Романтический набор">Романтический набор</option>
+          <option value="Экскурсия по Москве">Экскурсия по Москве</option>
+        </select>
+      </label>
+      <label>Цена (₽)<input name="price" type="number" required min="0" value="500"></label>
+      <button type="submit">Добавить продажу</button>
+    </form>
+    <div>
+      <h3>Продажи и выручка</h3>
+      <table id="upsell-table" class="table"></table>
+      <div class="kpi">Всего продаж: <span id="upsell-count">0</span> • Выручка: <span id="upsell-sum">0</span> ₽</div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" class="card">
+  <h2>Отзывы: алерты и авто‑черновики</h2>
+  <div class="row">
+    <div class="form">
+      <label>Вставьте текст отзыва
+        <textarea id="review-text" rows="6" placeholder="Номер чистый, но было шумно с улицы. Завтрак хороший, персонал внимательный…"></textarea>
+      </label>
+      <label>Тон ответа
+        <select id="review-tone">
+          <option value="warm">Тёплый/эмпатичный</option>
+          <option value="formal">Официальный</option>
+          <option value="upbeat">Позитивный/доброжелательный</option>
+        </select>
+      </label>
+      <button id="review-generate">Сгенерировать ответ</button>
+    </div>
+    <div>
+      <h3>Предложенный ответ</h3>
+      <textarea id="review-draft" rows="10" class="mono"></textarea>
+      <button id="review-copy">Скопировать</button>
+    </div>
+  </div>
+</section>
+
+<section id="housekeeping" class="card">
+  <h2>Хаускипинг/Техслужба: QR‑заявки и SLA</h2>
+  <div class="row">
+    <div class="form">
+      <label>Номер комнаты<input id="hk-room" placeholder="Напр.: 312"></label>
+      <label>Ссылка для гостей (вставьте в QR)
+        <input id="hk-link" readonly>
+      </label>
+      <img id="hk-qr" class="qr" alt="QR">
+      <button id="hk-make">Сгенерировать ссылку + QR</button>
+    </div>
+    <div>
+      <h3>Заявки</h3>
+      <table id="hk-table" class="table"></table>
+    </div>
+  </div>
+  <p class="muted">Гостевая форма доступна по ссылке и создаёт задачу в этой таблице (LocalStorage). Дальше — статусы «в работе»/«готово».</p>
+</section>
+
+<section id="wifi" class="card">
+  <h2>Гостевой Wi‑Fi‑портал: согласия и промо</h2>
+  <div class="row">
+    <form id="wifi-form" class="form">
+      <label>ФИО<input name="fio" required></label>
+      <label>Телефон<input name="phone" required placeholder="+7XXXXXXXXXX"></label>
+      <label>Email<input name="email" type="email"></label>
+      <fieldset>
+        <legend>Согласия (152‑ФЗ)</legend>
+        <label class="check"><input type="checkbox" name="consent_data" required> Согласен(а) на обработку персональных данных</label>
+        <label class="check"><input type="checkbox" name="consent_marketing"> Согласен(а) на получение информационных материалов</label>
+      </fieldset>
+      <button type="submit">Подключиться к Wi‑Fi</button>
+    </form>
+    <div>
+      <h3>Промо‑оффер</h3>
+      <p>Промокод на сайте отеля: <code>ARBAT‑DIRECT‑10</code> — скидка 10% только при прямом бронировании.</p>
+      <p>Кнопка ниже демонстрирует UTM‑переход (в реальности — на официальный сайт):</p>
+      <a class="btn" href="https://example.com/?utm_source=wifi&utm_medium=captive&utm_campaign=arbat_house" target="_blank" rel="noopener">Перейти на сайт</a>
+    </div>
+  </div>
+</section>
+
+<section id="telephony" class="card">
+  <h2>Телефония/IVR (симулятор сценариев)</h2>
+  <div class="row">
+    <div class="form">
+      <label>Сценарий IVR
+        <select id="ivr-scenario">
+          <option value="default">1 — Бронирование • 2 — Ресепшн • 3 — Ивенты</option>
+          <option value="night">Ночной режим: 1 — Дежурный • 2 — ВА/почта</option>
+          <option value="peak">Пик‑час: 1 — Коллбек • 2 — Ресепшн • 3 — Найти бронь</option>
+        </select>
+      </label>
+      <label>Ввод клиента (цифра)<input id="ivr-input" placeholder="1/2/3"></label>
+      <button id="ivr-run">Смоделировать</button>
+    </div>
+    <div>
+      <h3>Результат маршрутизации</h3>
+      <pre id="ivr-output" class="mono"></pre>
+      <h3>Невзятые звонки</h3>
+      <table id="ivr-missed" class="table"></table>
+    </div>
+  </div>
+</section>
+
+<section id="mice" class="card">
+  <h2>MICE/Группы: калькулятор пакетов</h2>
+  <div class="row">
+    <form id="mice-form" class="form">
+      <label>Гостей<input name="pax" type="number" min="5" value="20" required></label>
+      <label>Часы аренды зала<input name="hours" type="number" min="1" value="4" required></label>
+      <label>Опции
+        <div class="check"><input type="checkbox" name="coffee"> Кофе‑брейк</div>
+        <div class="check"><input type="checkbox" name="lunch"> Обед</div>
+        <div class="check"><input type="checkbox" name="tech"> Проектор/звук</div>
+      </label>
+      <button type="submit">Посчитать</button>
+      <button type="button" id="mice-print">Распечатать/в PDF</button>
+    </form>
+    <div>
+      <h3>Коммерческое предложение</h3>
+      <div id="mice-quote" class="quote"></div>
+    </div>
+  </div>
+</section>
+
+<section id="translator" class="card">
+  <h2>Переводчик в реальном времени (speech → translate → speech)</h2>
+  <p>Работает в Chrome/Edge. Микрофон — по HTTPS или локально. Перевод через публичный <a href="https://libretranslate.com" target="_blank" rel="noopener">LibreTranslate</a> (без ключа).</p>
+  <div class="row">
+    <div class="form">
+      <label>Источник (распознавание речи)
+        <select id="tr-src">
+          <option value="ru">Русский (ru-RU)</option>
+          <option value="en">English (en-US)</option>
+          <option value="zh">中文 (zh-CN)</option>
+          <option value="ar">العربية (ar-SA)</option>
+        </select>
+      </label>
+      <label>Назначение (перевод + озвучка)
+        <select id="tr-dst">
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+          <option value="zh">中文</option>
+          <option value="ar">العربية</option>
+        </select>
+      </label>
+      <div class="tr-controls">
+        <button id="tr-start">Старт</button>
+        <button id="tr-stop" disabled>Стоп</button>
+      </div>
+      <div class="grid two">
+        <div>
+          <h3>Стенограмма</h3>
+          <textarea id="tr-src-text" rows="6" class="mono"></textarea>
+        </div>
+        <div>
+          <h3>Перевод</h3>
+          <textarea id="tr-dst-text" rows="6" class="mono"></textarea>
+        </div>
+      </div>
+    </div>
+    <aside class="hint">
+      <ul>
+        <li>Говорите после «Старт». Распознавание: Web Speech API.</li>
+        <li>Перевод: LibreTranslate (по умолчанию), без ключа.</li>
+        <li>Озвучка: SpeechSynthesis (выбор голоса системы).</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section id="admin" class="card">
+  <h2>Админ‑панель демо (очистка/экспорт)</h2>
+  <div class="row">
+    <div class="form">
+      <button id="admin-export">Экспортировать все данные (JSON)</button>
+      <button id="admin-wipe" class="danger">Очистить LocalStorage</button>
+    </div>
+    <div>
+      <h3>JSON‑экспорт</h3>
+      <textarea id="admin-json" rows="10" class="mono"></textarea>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <span>Vanilla.js demo • Под Arbat House • © 2025</span>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
