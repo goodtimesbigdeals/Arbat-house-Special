@@ -1,0 +1,56 @@
+/* Basic modern styling */
+:root{
+  --bg:#0b0c10;
+  --card:#111318;
+  --muted:#6b7280;
+  --text:#e5e7eb;
+  --accent:#47c1bf;
+  --brand:#7c5cff;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:linear-gradient(180deg,#0b0c10,#0a0a0a);color:var(--text);font:16px/1.6 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
+a{color:var(--accent);text-decoration:none}
+.site-header{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#0b0c10cc;border-bottom:1px solid #1f2430;backdrop-filter:blur(6px)}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.2px}
+.top-nav a{margin:0 8px;padding:6px 10px;border-radius:8px}
+.top-nav a:hover{background:#1b1f2a}
+main{max-width:1080px;margin:24px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid #1f2430;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 10px 20px rgba(0,0,0,.35)}
+h1,h2,h3{margin:0 0 12px}
+h1{font-size:28px}
+h2{font-size:22px}
+h3{font-size:18px}
+p{margin:8px 0}
+.grid{display:grid;gap:12px}
+.grid.two{grid-template-columns:1fr 1fr}
+@media (max-width:860px){.grid.two{grid-template-columns:1fr} .row{flex-direction:column}}
+.row{display:flex;gap:16px;align-items:flex-start}
+.form{display:flex;flex-direction:column;gap:10px;min-width:320px}
+label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+input,select,textarea,button{background:#0d0f14;color:var(--text);border:1px solid #2a3142;border-radius:10px;padding:10px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#3b82f6}
+button{cursor:pointer;font-weight:700}
+.btn{display:inline-block;background:#0d0f14;border:1px solid #2a3142;border-radius:10px;padding:10px 12px}
+.btn:hover,button:hover{filter:brightness(1.2)}
+.kpi{margin-top:10px;font-weight:700}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border-bottom:1px solid #232838;padding:8px}
+.chat{height:260px;overflow:auto;border:1px solid #232838;border-radius:10px;padding:10px;background:#0d0f14;margin:6px 0}
+.chat .msg{margin:6px 0;padding:8px;border-radius:8px;max-width:80%}
+.chat .guest{background:#19212e;align-self:flex-end}
+.chat .bot{background:#141a23;border:1px solid #242c3e}
+.chat-inputs{display:flex;gap:8px}
+.hint{max-width:360px;background:#0d0f14;border:1px dashed #2a3142;border-radius:12px;padding:12px}
+.qr{width:180px;height:180px;border:1px solid #232838;border-radius:8px;background:#0d0f14;object-fit:contain}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.site-footer{margin:24px auto;max-width:1080px;padding:16px;color:#9aa3b2;text-align:center}
+fieldset{border:1px dashed #2a3142;border-radius:12px;padding:10px}
+legend{padding:0 6px;color:#9aa3b2}
+.check{display:flex;gap:8px;align-items:center;font-weight:500}
+.danger{border-color:var(--danger);color:#ffdede}
+.quote{background:#0d0f14;border:1px solid #232838;border-radius:12px;padding:12px;min-height:120px}
